@@ -1,0 +1,94 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/dialog_editor/slot/slot.gd" type="Script" id=1]
+[ext_resource path="res://addons/dialog_editor/src/Remove.svg" type="Texture" id=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.6, 0.6, 0.6, 0 )
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="Slot" type="PanelContainer"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = -15.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 800, 35 )
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 797.0
+margin_bottom = 32.0
+custom_constants/separation = 15
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SID" type="SpinBox" parent="HBoxContainer"]
+margin_right = 74.0
+margin_bottom = 29.0
+min_value = 1.0
+value = 1.0
+
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
+margin_left = 89.0
+margin_right = 93.0
+margin_bottom = 29.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AIDSelector" type="OptionButton" parent="HBoxContainer"]
+margin_left = 108.0
+margin_right = 313.0
+margin_bottom = 29.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LIDSelector" type="OptionButton" parent="HBoxContainer"]
+margin_left = 328.0
+margin_right = 534.0
+margin_bottom = 29.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Preview" type="LineEdit" parent="HBoxContainer"]
+margin_left = 549.0
+margin_right = 755.0
+margin_bottom = 29.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+align = 1
+editable = false
+placeholder_text = "Dialog preview"
+caret_blink = true
+caret_blink_speed = 0.5
+
+[node name="RemoveButton" type="TextureButton" parent="HBoxContainer"]
+margin_left = 770.0
+margin_right = 794.0
+margin_bottom = 29.0
+rect_min_size = Vector2( 24, 0 )
+texture_normal = ExtResource( 2 )
+expand = true
+stretch_mode = 3
+
+[connection signal="value_changed" from="HBoxContainer/SID" to="." method="set_sid"]
+[connection signal="item_selected" from="HBoxContainer/AIDSelector" to="." method="_on_AIDSelector_item_selected"]
+[connection signal="item_selected" from="HBoxContainer/LIDSelector" to="." method="_on_LIDSelector_item_selected"]
+[connection signal="button_up" from="HBoxContainer/RemoveButton" to="." method="_on_RemoveButton_button_up"]

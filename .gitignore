@@ -1,0 +1,11 @@
+# Import cache
+.import/
+
+# Files to ignore
+*.translation
+export_presets.cfg
+
+# Binaries
+bin/
+build/
+lib/
