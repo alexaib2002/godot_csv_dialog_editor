@@ -1,0 +1,8 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://addons/dialog_editor/fixed_dialog_resource/FixedDialog.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+csv_source = "res://translations/dialog.csv"
+story = [ "Actor1_0", "Actor2_0", "Actor1_1", "Actor2_1" ]

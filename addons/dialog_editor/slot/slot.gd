@@ -2,11 +2,12 @@ tool
 extends PanelContainer
 
 var root: Node
-var did: String = ""
+var did: String = "" setget set_did
 var aid: String = "" setget _on_AIDSelector_item_selected
 var lid: String = "" setget _on_LIDSelector_item_selected
 var sid: int setget set_sid # SlotID
 
+signal did_changed(did)
 
 func set_sid(new):
 	sid = new
@@ -24,6 +25,12 @@ func set_idx(_aid, _lid):
 	$HBoxContainer/Preview.set_text(root.find_key(did))
 
 
+func set_did(_did):
+	did = _did
+	emit_signal("did_changed", did)
+	
+
+
 func update_items():
 	root = self.get_owner()
 	$HBoxContainer/AIDSelector.clear()
@@ -39,15 +46,12 @@ func _on_AIDSelector_item_selected(index):
 	for lid in lids:
 		$HBoxContainer/LIDSelector.add_item(lid)
 	aid = $HBoxContainer/AIDSelector.get_item_text(index)
-	did = "%s_%s" % [aid, lid]
-	$HBoxContainer/Preview.set_text(root.find_key(did))
+	set_did("%s_%s" % [aid, lid])
 
 
 func _on_LIDSelector_item_selected(index):
-#	did = "%s_%s" % [aid, $HBoxContainer/LIDSelector.get_item_text(index)]
 	lid = $HBoxContainer/LIDSelector.get_item_text(index)
-	did = "%s_%s" % [aid, lid]
-	$HBoxContainer/Preview.set_text(root.find_key(did))
+	set_did("%s_%s" % [aid, lid])
 
 
 func _on_RemoveButton_button_up():

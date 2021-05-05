@@ -17,20 +17,23 @@ var load_csv_file_explorer: = FileDialog.new()
 var load_res_file_explorer: = FileDialog.new()
 var save_res_file_explorer: = FileDialog.new()
 
+export(NodePath) var grid_container
+
 
 func _ready():
-	$TopMenu/LoadMenu.get_popup().connect("id_pressed", 
+	grid_container = get_node(grid_container)
+	$MarginContainer/TopMenu/LoadMenu.get_popup().connect("id_pressed", 
 			self, "_on_LoadMenu_id_selection")
 	$CenterContainer.add_child(load_csv_file_explorer)
 	$CenterContainer.add_child(load_res_file_explorer)
 	load_res_file_explorer.connect("file_selected", 
 			self, "_load_dialog_resource")
 	$CenterContainer.add_child(save_res_file_explorer)
-	$TopMenu/LocaleSelector.clear()
+	$MarginContainer/TopMenu/LocaleSelector.clear()
 	if ProjectSettings.get("locale/locale_filter")[1].empty():
 		print_debug("You don't have any translation defined")
 	for locale in ProjectSettings.get("locale/locale_filter")[1]:
-		$TopMenu/LocaleSelector.add_item(locale)
+		$MarginContainer/TopMenu/LocaleSelector.add_item(locale)
 	for node in get_tree().get_nodes_in_group("FileInterface"):
 		node.hide()
 
@@ -38,18 +41,17 @@ func _ready():
 func find_key(key: String) -> String:
 	for row in csv_table:
 		if row[0] == key:
-			return row[$TopMenu/LocaleSelector.get_selected_id() + 1]
+			return row[$MarginContainer/TopMenu/LocaleSelector.get_selected_id() + 1]
 	return ""
 
 
 func request_value(val: int, slot: Slot):
-	var container = $CenterContainer/ScrollContainer/GridContainer
-	slot.get_node("HBoxContainer/SID").set_max(container.get_child_count())
+	slot.get_node("HBoxContainer/SID").set_max(grid_container.get_child_count())
 	if val > slot.get_node("HBoxContainer/SID").get_max():
 		return # Reject change if max hasn't been updated before call
-	var target_node = container.get_child(val - 1)
+	var target_node = grid_container.get_child(val - 1)
 	target_node.sid = slot.sid
-	container.move_child(slot, val - 1)
+	grid_container.move_child(slot, val - 1)
 
 
 func _on_LoadMenu_id_selection(id):
@@ -65,7 +67,7 @@ func _file_explorer_load_csv():
 	load_csv_file_explorer.get_line_edit().clear()
 	load_csv_file_explorer.set_mode(FileDialog.MODE_OPEN_FILE)
 	load_csv_file_explorer.popup_centered(Vector2(650,500))
-	var line_dir: String = $TopMenu/FileLineEdit.get_text()
+	var line_dir: String = $MarginContainer/TopMenu/FileDescriptor/FileLineEdit.get_text()
 	var path = yield(load_csv_file_explorer, "file_selected")
 	load_csv_file_explorer.clear_filters()
 	csv_path = path
@@ -81,19 +83,19 @@ func _file_explorer_load_resource():
 
 
 func _load_dialog_resource(path):
-	for child in $CenterContainer/ScrollContainer/GridContainer.get_children():
+	for child in grid_container.get_children():
 		child.queue_free()
 		yield(child, "tree_exited")
 	var load_res: Dialog = ResourceLoader.load(path)
 	_load_csv(load_res.csv_source)
 	for i in load_res.story:
 		var did = i.split("_")
-		var slot = instance_slot($CenterContainer/ScrollContainer/GridContainer)
+		var slot = instance_slot(grid_container)
 		slot.set_idx(did[0], did[1])
 
 
 func _on_AddDialogButton_button_up():
-	instance_slot($CenterContainer/ScrollContainer/GridContainer)
+	instance_slot(grid_container)
 
 
 func instance_slot(parent: Node) -> Slot:
@@ -106,23 +108,33 @@ func instance_slot(parent: Node) -> Slot:
 			"value_changed", self, "request_value", [node])
 	node.get_node("HBoxContainer/RemoveButton").connect(
 		"tree_exited", self, "update_sid")
+	node.connect("did_changed", self, "update_preview")
 	return node
 
 
-func update_sid():
-	for node in $CenterContainer/ScrollContainer/GridContainer.get_children():
+func update_sid() -> void:
+	for node in grid_container.get_children():
 		node.sid = node.get_position_in_parent() + 1
 
 
+func update_preview(did) -> void:
+	var preview = find_key(did)
+	print(str(did))
+	$CenterContainer/CenterSeparator/PreviewPanel/MarginContainer/ \
+			VBoxContainer/HBoxContainer/CurrentDID.set_text(did)
+	get_node("CenterContainer/CenterSeparator/PreviewPanel/MarginContainer/VBoxContainer/Preview"
+			).set_text(preview)
+
+
 func _on_LocaleSelector_item_selected(index):
-	for slot in $CenterContainer/ScrollContainer/GridContainer.get_children():
-		slot.get_node("HBoxContainer/Preview").set_text(find_key(slot.did))
+	for slot in grid_container.get_children():
+		slot.get_node("CenterContainer/CenterSeparator/PreviewPanel/MarginContainer/VBoxContainer/Preview").set_text(find_key(slot.did))
 
 
 func _on_SaveButton_button_up():
 	var save_res: Dialog = Dialog.new()
 	var save_story: PoolStringArray = []
-	for slot in $CenterContainer/ScrollContainer/GridContainer.get_children():
+	for slot in grid_container.get_children():
 		save_story.append(slot.did)
 	save_res.csv_source = csv_path
 	save_res.story = save_story
@@ -180,8 +192,8 @@ static func make_relations(table) -> Dictionary:
 func _load_csv(csv_path):
 	csv_table = get_csv_data(csv_path)
 	id_ref = make_relations(csv_table)
-	for slot in $CenterContainer/ScrollContainer/GridContainer.get_children():
+	for slot in grid_container.get_children():
 		slot.update_items()
 	for item in get_tree().get_nodes_in_group("FileInterface"):
 		item.show()
-	$TopMenu/FileLineEdit.set_text(csv_path)
+	$MarginContainer/TopMenu/FileDescriptor/FileLineEdit.set_text(csv_path)

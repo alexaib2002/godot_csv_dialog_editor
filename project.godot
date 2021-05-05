@@ -20,8 +20,12 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Plugins"
+config/name="CSV Dialog Editor"
 config/icon="res://icon.png"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/dialog_editor/plugin.cfg" )
 
 [importer_defaults]
 
@@ -31,7 +35,7 @@ csv_translation={
 
 [locale]
 
-translations=PoolStringArray( "res://dialog.en.translation", "res://dialog.es.translation" )
+translations=PoolStringArray( "res://translations/dialog.en.translation", "res://translations/dialog.es.translation" )
 locale_filter=[ 1, [ "en", "es" ] ]
 
 [physics]
