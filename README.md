@@ -1,4 +1,6 @@
 # CSV Dialog Editor
+<p align="center"><img height="200" src="https://upload.wikimedia.org/wikipedia/commons/f/f0/CSV_Logo.svg"></img></p>
+
 Create CSV-based dialog stories in Godot
 
 ## Getting started
@@ -13,7 +15,11 @@ To install this plugin, you need to download this project as a ZIP file and extr
 
 ## Making the CSV file
 You will need to create and format a CSV file with an spreadsheet editor (ex: LibreOffice Calc, MS Excel...) following the guidelines on the <a href="https://docs.godotengine.org/en/stable/getting_started/workflow/assets/importing_translations.html#translation-format">Translation format guide</a>.
-The keys will be composed of two main components, the **AID** (Actor ID) and the **LID** (Line ID). The AID refers to the character or object who will trigger that line. The LID is used for making a different line. It should be incremental. The AID and LID are separated by an _ underscore. The sum of the AID and LID is called DID (Dialog ID).
+The keys will be composed of two main components, the **AID** (Actor ID) and the **LID** (Line ID). The AID refers to the character or object who will trigger that line. The LID is used for making a different line. It should be incremental. The AID and LID are separated by an _ underscore. 
+
+The key (union of an AID and LID) is called **DID** (Dialog ID).
+
+Stories are composed by multiple DIDs, and they're readed from the first slot to the last one.
 
 The format of your keys should be:
 `AID_LID`
@@ -24,6 +30,16 @@ Example:
 
 ## Sample project
 Currently, the sample project is a WIP. Will be available in a few days.
+
+## Roadmap
+- [ ] Sample project
+### General enhancements
+- [ ] Multiple stories inside one resource
+- [ ] Dialog tester (reproduce dialog on editor)
+- [ ] Preview dialog (press button on slot, and the translation will appear on the preview tab)
+### Future scope
+- [ ] Multiple dialogs open
+- [ ] Add animations (via Tween) (may produce some slowdowns...)
 
 ## FAQ
 * **Why CSV files?**
