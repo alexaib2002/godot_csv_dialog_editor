@@ -12,7 +12,7 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "Dialog",
 "language": "GDScript",
-"path": "res://addons/dialog_editor/fixed_dialog_resource/FixedDialog.gd"
+"path": "res://addons/dialog_editor/dialog_resource/Dialog.gd"
 } ]
 _global_script_class_icons={
 "Dialog": ""
@@ -22,10 +22,6 @@ _global_script_class_icons={
 
 config/name="CSV Dialog Editor"
 config/icon="res://icon.png"
-
-[editor_plugins]
-
-enabled=PoolStringArray( "res://addons/dialog_editor/plugin.cfg" )
 
 [importer_defaults]
 

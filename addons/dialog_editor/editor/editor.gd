@@ -17,11 +17,10 @@ var load_csv_file_explorer: = FileDialog.new()
 var load_res_file_explorer: = FileDialog.new()
 var save_res_file_explorer: = FileDialog.new()
 
-export(NodePath) var grid_container
+export(NodePath) var grid_container: NodePath
 
 
 func _ready():
-	grid_container = get_node(grid_container)
 	$MarginContainer/TopMenu/LoadMenu.get_popup().connect("id_pressed", 
 			self, "_on_LoadMenu_id_selection")
 	$CenterContainer.add_child(load_csv_file_explorer)
@@ -46,12 +45,13 @@ func find_key(key: String) -> String:
 
 
 func request_value(val: int, slot: Slot):
-	slot.get_node("HBoxContainer/SID").set_max(grid_container.get_child_count())
+	var container = get_node(grid_container)
+	slot.get_node("HBoxContainer/SID").set_max(container.get_child_count())
 	if val > slot.get_node("HBoxContainer/SID").get_max():
 		return # Reject change if max hasn't been updated before call
-	var target_node = grid_container.get_child(val - 1)
+	var target_node = container.get_child(val - 1)
 	target_node.sid = slot.sid
-	grid_container.move_child(slot, val - 1)
+	container.move_child(slot, val - 1)
 
 
 func _on_LoadMenu_id_selection(id):
@@ -83,19 +83,20 @@ func _file_explorer_load_resource():
 
 
 func _load_dialog_resource(path):
-	for child in grid_container.get_children():
+	var container = get_node(grid_container)
+	for child in container.get_children():
 		child.queue_free()
 		yield(child, "tree_exited")
 	var load_res: Dialog = ResourceLoader.load(path)
 	_load_csv(load_res.csv_source)
 	for i in load_res.story:
 		var did = i.split("_")
-		var slot = instance_slot(grid_container)
+		var slot = instance_slot(container)
 		slot.set_idx(did[0], did[1])
 
 
 func _on_AddDialogButton_button_up():
-	instance_slot(grid_container)
+	instance_slot(get_node(grid_container))
 
 
 func instance_slot(parent: Node) -> Slot:
@@ -113,7 +114,7 @@ func instance_slot(parent: Node) -> Slot:
 
 
 func update_sid() -> void:
-	for node in grid_container.get_children():
+	for node in get_node(grid_container).get_children():
 		node.sid = node.get_position_in_parent() + 1
 
 
@@ -127,14 +128,14 @@ func update_preview(did) -> void:
 
 
 func _on_LocaleSelector_item_selected(index):
-	for slot in grid_container.get_children():
+	for slot in get_node(grid_container).get_children():
 		slot.get_node("CenterContainer/CenterSeparator/PreviewPanel/MarginContainer/VBoxContainer/Preview").set_text(find_key(slot.did))
 
 
 func _on_SaveButton_button_up():
 	var save_res: Dialog = Dialog.new()
 	var save_story: PoolStringArray = []
-	for slot in grid_container.get_children():
+	for slot in get_node(grid_container).get_children():
 		save_story.append(slot.did)
 	save_res.csv_source = csv_path
 	save_res.story = save_story
@@ -192,7 +193,7 @@ static func make_relations(table) -> Dictionary:
 func _load_csv(csv_path):
 	csv_table = get_csv_data(csv_path)
 	id_ref = make_relations(csv_table)
-	for slot in grid_container.get_children():
+	for slot in get_node(grid_container).get_children():
 		slot.update_items()
 	for item in get_tree().get_nodes_in_group("FileInterface"):
 		item.show()
