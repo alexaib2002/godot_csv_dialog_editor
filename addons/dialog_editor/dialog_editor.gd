@@ -1,7 +1,7 @@
 tool
 extends EditorPlugin
 
-var main = preload("res://addons/dialog_editor/editor/MainInterface.tscn").instance()
+var main = preload("res://addons/dialog_editor/editor/editor.tscn").instance()
 
 
 func _enter_tree():

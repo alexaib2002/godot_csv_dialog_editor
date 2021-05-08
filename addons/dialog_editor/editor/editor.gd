@@ -129,7 +129,7 @@ func update_preview(did) -> void:
 
 func _on_LocaleSelector_item_selected(index):
 	for slot in get_node(grid_container).get_children():
-		slot.get_node("CenterContainer/CenterSeparator/PreviewPanel/MarginContainer/VBoxContainer/Preview").set_text(find_key(slot.did))
+		get_node("CenterContainer/CenterSeparator/PreviewPanel/MarginContainer/VBoxContainer/Preview").set_text(find_key(slot.did))
 
 
 func _on_SaveButton_button_up():

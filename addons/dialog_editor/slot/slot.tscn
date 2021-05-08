@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://addons/dialog_editor/slot/slot.gd" type="Script" id=1]
 [ext_resource path="res://addons/dialog_editor/src/Remove.svg" type="Texture" id=2]
+[ext_resource path="res://addons/dialog_editor/src/GuiVisibilityVisible.svg" type="Texture" id=3]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.6, 0.6, 0.6, 0 )
@@ -28,7 +29,7 @@ __meta__ = {
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_left = 3.0
 margin_top = 3.0
-margin_right = 223.0
+margin_right = 262.0
 margin_bottom = 27.0
 custom_constants/separation = 15
 __meta__ = {
@@ -41,31 +42,40 @@ margin_bottom = 24.0
 min_value = 1.0
 value = 1.0
 
-[node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
+[node name="PreviewButton" type="TextureButton" parent="HBoxContainer"]
 margin_left = 89.0
-margin_right = 93.0
+margin_right = 112.864
+margin_bottom = 24.0
+rect_min_size = Vector2( 23.864, 0 )
+texture_normal = ExtResource( 3 )
+expand = true
+stretch_mode = 3
+
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
+margin_left = 127.0
+margin_right = 131.0
 margin_bottom = 24.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="AIDSelector" type="OptionButton" parent="HBoxContainer"]
-margin_left = 108.0
-margin_right = 137.0
+margin_left = 146.0
+margin_right = 175.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="LIDSelector" type="OptionButton" parent="HBoxContainer"]
-margin_left = 152.0
-margin_right = 181.0
+margin_left = 190.0
+margin_right = 220.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="RemoveButton" type="TextureButton" parent="HBoxContainer"]
-margin_left = 196.0
-margin_right = 220.0
+margin_left = 235.0
+margin_right = 259.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 0 )
 texture_normal = ExtResource( 2 )
@@ -73,6 +83,7 @@ expand = true
 stretch_mode = 3
 
 [connection signal="value_changed" from="HBoxContainer/SID" to="." method="set_sid"]
+[connection signal="button_up" from="HBoxContainer/PreviewButton" to="." method="_on_PreviewButton_button_up"]
 [connection signal="item_selected" from="HBoxContainer/AIDSelector" to="." method="_on_AIDSelector_item_selected"]
 [connection signal="item_selected" from="HBoxContainer/LIDSelector" to="." method="_on_LIDSelector_item_selected"]
 [connection signal="button_up" from="HBoxContainer/RemoveButton" to="." method="_on_RemoveButton_button_up"]

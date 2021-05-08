@@ -9,6 +9,7 @@ var sid: int setget set_sid # SlotID
 
 signal did_changed(did)
 
+
 func set_sid(new):
 	sid = new
 	$HBoxContainer/SID.value = new
@@ -28,7 +29,10 @@ func set_idx(_aid, _lid):
 func set_did(_did):
 	did = _did
 	emit_signal("did_changed", did)
-	
+
+
+func _on_PreviewButton_button_up():
+	emit_signal("did_changed", did)
 
 
 func update_items():
